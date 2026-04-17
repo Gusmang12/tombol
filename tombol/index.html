@@ -171,6 +171,50 @@
                 padding: 10px 5px;
             }
         }
+        /* ✅ JAM GRID RESPONSIVE - 12 TOMBOL TETAP! */
+.jam-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Desktop: 6 kolom */
+    gap: 8px;
+    max-width: 100%;
+}
+
+.sound-btn {
+    width: 65px;
+    height: 65px;
+    font-size: 12px;
+    border-radius: 15px;
+}
+
+/* MOBILE: 3 KOLOM + WRAP AUTOMATIC */
+@media (max-width: 768px) {
+    .jam-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile: 3 kolom */
+        gap: 6px;
+    }
+    
+    .sound-btn {
+        width: 58px !important;
+        height: 58px !important;
+        font-size: 11px !important;
+    }
+    
+    /* Tabel lain tetap scroll horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+}
+
+/* TABLET: 4 KOLOM */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .jam-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
     </style>
 </head>
 <body>
@@ -258,32 +302,22 @@
 
         <!-- Tabel 4: Jam Keberangkatan (12 tombol) -->
         <div class="table-container">
-            <div class="table-title">⏰ Jam Keberangkatan</div>
-            <table>
-                <tr>
-                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
-                </tr>
-                <tr>
-                    <td><button class="sound-btn btn-jam" data-sound="time01">07:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time02">08:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time03">09:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time04">10:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time05">11:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time06">12:00</button></td>
-                </tr>
-                <tr>
-                    <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th>
-                </tr>
-                <tr>
-                    <td><button class="sound-btn btn-jam" data-sound="time07">13:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time08">14:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time09">15:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time10">16:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time11">17:00</button></td>
-                    <td><button class="sound-btn btn-jam" data-sound="time12">18:00</button></td>
-                </tr>
-            </table>
-        </div>
+    <div class="table-title">⏰ Jam Keberangkatan (12 Tombol)</div>
+    <div class="jam-grid">
+        <button class="sound-btn btn-jam" data-sound="jam01">07:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam02">08:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam03">09:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam04">10:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam05">11:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam06">12:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam07">13:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam08">14:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam09">15:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam10">16:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam11">17:00</button>
+        <button class="sound-btn btn-jam" data-sound="jam12">18:00</button>
+    </div>
+</div>
     </div>
 
     <script>
