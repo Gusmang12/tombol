@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Board Kapal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .table-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .table-title {
+            text-align: center;
+            color: #2a5298;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 4px solid #e0e0e0;
+        }
+
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+        }
+
+        .sound-btn {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        /* Warna berbeda untuk setiap kategori */
+        .btn-pembukaan { background: linear-gradient(45deg, #ff6b6b, #ee5a52); }
+        .btn-kapal { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+        .btn-tujuan { background: linear-gradient(45deg, #45b7d1, #96c93d); }
+        .btn-jam { background: linear-gradient(45deg, #feca57, #ff9ff3); }
+
+        .sound-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        .sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        .sound-btn::before {
+            content: '🔊';
+            font-size: 15px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sound-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+            z-index: 1;
+        }
+
+        .sound-btn.playing {
+            animation: pulse 0.3s ease;
+        }
+
+        .sound-btn.playing::before {
+            opacity: 1;
+        }
+
+        .sound-btn.playing::after {
+            width: 120px;
+            height: 120px;
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes ripple {
+            to {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .delay-info {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        @media (max-width: 768px) {
+            .sound-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+            }
+        }
+        /* ✅ JAM GRID RESPONSIVE - 12 TOMBOL TETAP! */
+.jam-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Desktop: 6 kolom */
+    gap: 8px;
+    max-width: 100%;
+}
+
+.sound-btn {
+    width: 65px;
+    height: 65px;
+    font-size: 12px;
+    border-radius: 15px;
+}
+
+/* MOBILE: 3 KOLOM + WRAP AUTOMATIC */
+@media (max-width: 768px) {
+    .jam-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile: 3 kolom */
+        gap: 6px;
+    }
+    
+    .sound-btn {
+        width: 58px !important;
+        height: 58px !important;
+        font-size: 11px !important;
+    }
+    
+    /* Tabel lain tetap scroll horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+}
+
+/* TABLET: 4 KOLOM */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .jam-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚢 Sound Board Kapal 🚢</h1>
+
+        <!-- Tabel 1: Pembukaan -->
+        <div class="table-container">
+            <div class="table-title">📢 Pembukaan & Delay</div>
+            <table>
+                <tr>
+                    <th>Pembukaan 1</th>
+                    <th>Pembukaan 2</th>
+                    <th>Info Delay</th>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="sound-btn btn-pembukaan" data-sound="pembukaan1">ind</button>
+                        <button class="sound-btn btn-pembukaan" data-sound="opening1">eng</button>
+                    </td>
+                    <td>
+                        <button class="sound-btn btn-pembukaan" data-sound="pembukaan2">perhatian</button>
+                        <button class="sound-btn btn-pembukaan" data-sound="opening2">attention</button>
+                    </td>
+                    <td>
+                        <button class="sound-btn btn-pembukaan" data-sound="pembukaan3">delay-info</button>
+                        <button class="sound-btn btn-pembukaan" data-sound="opening3">delay-info</button>
+                    </td>
+                    <!--td class="delay-info">Delay: 3 detik</td-->
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tabel 2: Nama Kapal (10 tombol) -->
+        <div class="table-container">
+            <div class="table-title">⛴️ Nama Kapal</div>
+            <table>
+                <tr>
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                </tr>
+                <tr>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal1">Lembongan Expres</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal2">Lembongan Expres 2</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal3">GILI NUSA 1</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal4">MD 58</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal5">BENZ FAST BOAT</button></td>
+                </tr>
+                <tr>
+                    <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                </tr>
+                <tr>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal6">GRAND TANIS</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal7">SUNRISE FAST</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal8">RANGGER FAST</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal9">LUCKY MONKEY</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal10">GLORY PRIME</button></td>
+                </tr>
+                 <tr>
+                    <th>11</th><th>12</th><th>13</th><th>14</th><th>15</th>
+                </tr>
+                <tr>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal11">MARUTI DUTA II</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal12">WHITE MONKEY</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal13">GLORY II</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal14">RAY FISH</button></td>
+                    <td><button class="sound-btn btn-kapal" data-sound="kapal15">AGUNG JAYA</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tabel 3: Tujuan -->
+        <div class="table-container">
+            <div class="table-title">🎯 Tujuan</div>
+            <table>
+                <tr>
+                    <th>Tujuan 1</th>
+                    <th>Tujuan 2</th>
+                </tr>
+                <tr>
+                    <td><button class="sound-btn btn-tujuan" data-sound="destination1">Nusa Penida</button></td>
+                    <td><button class="sound-btn btn-tujuan" data-sound="destination2">Nusa Lembongan</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tabel 4: Jam Keberangkatan (12 tombol) -->
+        <div class="table-container">
+    <div class="table-title">⏰ Jam Keberangkatan (12 Tombol)</div>
+    <div class="jam-grid">
+        <button class="sound-btn btn-jam" data-sound="time01">07:00</button>
+        <button class="sound-btn btn-jam" data-sound="time73">07:30</button>
+        <button class="sound-btn btn-jam" data-sound="time02">08:00</button>
+        <button class="sound-btn btn-jam" data-sound="time83">08:30</button>
+        <button class="sound-btn btn-jam" data-sound="time03">09:00</button>
+        <button class="sound-btn btn-jam" data-sound="time04">10:00</button>
+        <button class="sound-btn btn-jam" data-sound="time05">11:00</button>
+        <button class="sound-btn btn-jam" data-sound="time06">12:00</button>
+        <button class="sound-btn btn-jam" data-sound="time07">13:00</button>
+        <button class="sound-btn btn-jam" data-sound="time08">14:00</button>
+        <button class="sound-btn btn-jam" data-sound="time09">15:00</button>
+        <button class="sound-btn btn-jam" data-sound="time10">16:00</button>
+
+    </div>
+</div>
+    </div>
+
+    <script>
+        // Daftar suara (ganti dengan file audio Anda atau gunakan text-to-speech)
+        const sounds = {
+            pembukaan1: "Selamat datang di pelabuhan Sanur",
+            opening1: "Welcome to Sanur Port",
+            pembukaan2: "Mohon perhatian penumpang Untuk Segera menuju dermaga dengan keberangkatan kapal",
+            opening2: "Attention passengers, please proceed to the pier for boat departure",
+            pembukaan3: "Mohon Maaf ada keterlambatan Keberangkatan untuk kapal",
+            opening3: "We apologize for the delay in departure for boat",
+            kapal1: "THE tanis lembongan express",
+            kapal2: "THE tanis lembongan express 2",
+            kapal3: "gili nusa 1",
+            kapal4: "modern dream 58",
+            kapal5: "benz fast boat",
+            kapal6: "grand tanis lembongan express",
+            kapal7: "sunrise fast boat",
+            kapal8: "tanis rangger fast cruise",
+            kapal9: "lucky monkey fast boat",
+            kapal10: "glory prime fast boat",
+             kapal11: "maruti duta 2",
+            kapal12: "white monkey fast boat",
+            kapal13: "glory 2 fast boat",
+            kapal14: "ray fish fast boat",
+            kapal15: "agung jaya fast boat",
+            tujuan1: "Tujuan Nusa Penida",
+            destination1: "Destination Nusa Penida",
+            tujuan2: "Tujuan Nusa Lembongan",
+            destination2: "Destination Nusa Lembongan",
+            jam01: "Pukul 07:00",
+            time73: "seven thirty o'clock,All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            time01: "seven o'clock, All passengers are expected to immediately go to the boarding gate area. Thank you for your attention. Enjoy your trip.",
+            time83: "eight thirty o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam02: "Pukul 08:00",
+            time02: "eight o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam03: "Pukul 09:00",
+            time03: "nine o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam04: "Pukul 10:00",
+            time04: "ten o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam05: "Pukul 11:00",
+            time05: "eleven o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam06: "Pukul 12:00",
+            time06: "twelve o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam07: "Pukul 13:00",
+            time07: "thirteen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam08: "Pukul 14:00",
+            time08: "fourteen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam09: "Pukul 15:00",
+            time09: "nineteen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam10: "Pukul 16:00",
+            time10: "sixteen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam11: "Pukul 17:00",
+            time11: "seventeen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+            jam12: "Pukul 18:00",
+            time12: "eighteen o'clock, All passengers are expected to immediately go to the MKP boarding gate area. Thank you for your attention. Enjoy your trip.",
+        };
+
+        // Event listener untuk semua tombol
+        document.querySelectorAll('.sound-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const soundKey = this.getAttribute('data-sound');
+                playSound(soundKey, this);
+            });
+        });
+
+        function playSound(soundKey, button) {
+            // Efek visual
+            button.classList.add('playing');
+            setTimeout(() => {
+                button.classList.remove('playing');
+            }, 600);
+
+            // Mainkan suara menggunakan Web Speech API (text-to-speech)
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(sounds[soundKey]);
+                utterance.lang = 'id-ID'; // Bahasa Indonesia
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                // Fallback: alert text
+                alert(`Suara: ${sounds[soundKey]}`);
+            }
+        }
+    </script>
+</body>
+</html>
